@@ -744,6 +744,7 @@ def main():
     doc = ('<!DOCTYPE html>\n<html lang="zh-CN"><head><meta charset="utf-8">\n'
            '<meta name="viewport" content="width=device-width,initial-scale=1">\n'
            '<meta name="robots" content="noindex,nofollow">\n'
+           '<meta name="theme-color" content="#0f1216">\n'
            '<title>%s</title>\n%s\n<body><div class="wrap">\n%s\n'
            '<script>%s</script>\n<script>%s</script>\n</body></html>' %
            (title, CSS, body, ech, pagejs))
