@@ -6,7 +6,7 @@ on:
     - cron: '0 1 * * 6'
   workflow_dispatch:          # 支持手动触发，便于首次验证
 
-# 需要写权限：把新页面提交回仓库，Netlify 收到 push 后自动发布
+# 需要写权限：把新页面提交回仓库，GitHub Pages 收到 push 后自动发布
 permissions:
   contents: write
 
