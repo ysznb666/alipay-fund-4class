@@ -55,7 +55,7 @@ jobs:
         continue-on-error: true
         run: python scripts/verify_page.py deploy_site/index.html
 
-      # 把新页面回写仓库：① 留档 ② 触发 Netlify 自动发布 ③ 下次兜底用的就是它
+      # 把新页面回写仓库：① 留档 ② 触发 GitHub Pages 自动发布 ③ 下次兜底用的就是它
       # 注意：.gitignore 把 work/qdii2026/*.json 排除了，所以 swap_state.json 必须用 -f 强制加入，
       #       否则 `git add` 会因「路径被忽略」直接以退出码 1 失败。
       - name: 提交发布包
@@ -67,20 +67,6 @@ jobs:
           git add -f work/qdii2026/swap_state.json
           git diff --cached --quiet || git commit -m "chore: 周更发布包 $(date -u +%Y-%m-%d)"
           git push
-
-      # 可选：仓库 Secrets 里配了 NETLIFY_BUILD_HOOK 就顺手敲一下 Netlify 的 Build Hook。
-      # 这样即便 Netlify 的「push 自动发布」被关掉，也能确保线上刷新。
-      - name: 触发 Netlify 重新发布（可选）
-        if: steps.pipeline.outcome == 'success'
-        env:
-          HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}
-        run: |
-          if [ -n "$HOOK" ]; then
-            code=$(curl -s -o /dev/null -w "%{http_code}" -X POST -d '{}' "$HOOK")
-            echo "Netlify build hook -> HTTP $code"
-          else
-            echo "未配置 NETLIFY_BUILD_HOOK，跳过（Netlify 会由 push 事件自动发布）"
-          fi
 
       - uses: actions/upload-artifact@v4
         if: always()
