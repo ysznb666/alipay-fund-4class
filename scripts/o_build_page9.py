@@ -743,6 +743,7 @@ def main():
     title = '支付宝可申购基金 · 四大类筛选与组合回测（%s）v9' % PAGE['asof']
     doc = ('<!DOCTYPE html>\n<html lang="zh-CN"><head><meta charset="utf-8">\n'
            '<meta name="viewport" content="width=device-width,initial-scale=1">\n'
+           '<meta name="robots" content="noindex,nofollow">\n'
            '<title>%s</title>\n%s\n<body><div class="wrap">\n%s\n'
            '<script>%s</script>\n<script>%s</script>\n</body></html>' %
            (title, CSS, body, ech, pagejs))
