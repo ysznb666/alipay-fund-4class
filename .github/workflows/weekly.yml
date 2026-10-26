@@ -6,9 +6,11 @@ on:
     - cron: '0 1 * * 6'
   workflow_dispatch:          # 支持手动触发，便于首次验证
 
-# 需要写权限：把新页面提交回仓库，GitHub Pages 收到 push 后自动发布
+# 写回周更结果，并在同一任务中直接发布 GitHub Pages
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 concurrency:
   group: weekly
@@ -18,6 +20,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 40
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
 
@@ -67,6 +72,21 @@ jobs:
           git add -f work/qdii2026/swap_state.json
           git diff --cached --quiet || git commit -m "chore: 周更发布包 $(date -u +%Y-%m-%d)"
           git push
+
+      - name: Configure GitHub Pages
+        if: steps.pipeline.outcome == 'success'
+        uses: actions/configure-pages@v5
+
+      - name: Upload GitHub Pages artifact
+        if: steps.pipeline.outcome == 'success'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: deploy_site
+
+      - name: Deploy GitHub Pages
+        id: deployment
+        if: steps.pipeline.outcome == 'success'
+        uses: actions/deploy-pages@v4
 
       - uses: actions/upload-artifact@v4
         if: always()
